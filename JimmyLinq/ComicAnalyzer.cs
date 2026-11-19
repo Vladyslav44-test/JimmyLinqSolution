@@ -5,11 +5,11 @@ using System.Linq;
 
 namespace JimmyLinq
 {
-    internal static class ComicAnalyzer
+    public static class ComicAnalyzer
     {
-        private static PriceRange CalculatePriceRange(Comic comic)
+        private static PriceRange CalculatePriceRange(Comic comic, IReadOnlyDictionary<int, decimal> prices)
         {
-            if (Comic.Prices[comic.Issue] < 100) return PriceRange.Cheap;
+            if (prices[comic.Issue] < 100) return PriceRange.Cheap;
             else return PriceRange.Expensive;
         }
 
@@ -17,7 +17,7 @@ namespace JimmyLinq
         {
             return from comic in comics
                    orderby prices[comic.Issue]
-                   group comic by CalculatePriceRange(comic) into comicsGroup
+                   group comic by CalculatePriceRange(comic, prices) into comicsGroup
                    select comicsGroup;
         }
         public static IEnumerable<string> GetReviews(IEnumerable<Comic> comics, IEnumerable<Review> reviews)

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace JimmyLinq
 {
-    internal class Comic
+    public class Comic
     {
         public static readonly IEnumerable<Comic> Catalog =
             new List<Comic>
