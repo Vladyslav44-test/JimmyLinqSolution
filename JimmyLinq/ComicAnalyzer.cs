@@ -15,18 +15,12 @@ namespace JimmyLinq
 
         public static IEnumerable<IGrouping<PriceRange, Comic>> GroupComicsByPrice(IEnumerable<Comic> comics, IReadOnlyDictionary<int, decimal> prices)
         {
-            return from comic in comics
-                   orderby prices[comic.Issue]
-                   group comic by CalculatePriceRange(comic, prices) into comicsGroup
-                   select comicsGroup;
+            return comics.OrderBy(comic => prices[comic.Issue]).GroupBy(comic => CalculatePriceRange(comic, prices));
         }
         public static IEnumerable<string> GetReviews(IEnumerable<Comic> comics, IEnumerable<Review> reviews)
         {
-            return from comic in comics
-                   join review in reviews
-                   on comic.Issue equals review.Issue
-                   orderby comic.Issue
-                   select $"{review.Critic} rated #{comic.Issue} '{comic.Name}' {review.Score:0.00}";
+            return comics.OrderBy(comic => comic.Issue).Join(reviews, comic => comic.Issue, review => review.Issue,
+                (comic, review) => $"{review.Critic} rated #{comic.Issue} '{comic.Name}' {review.Score:0.00}");
         }
     }
 }
